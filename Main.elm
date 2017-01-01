@@ -49,8 +49,8 @@ update msg model =
     GetIt ->
       (model, getIt)
 
-    NewAlbum (Ok newUrl) ->
-      ({ model | title = "Album 2"}, Cmd.none)
+    NewAlbum (Ok newTitle) ->
+      ({ model | title = newTitle}, Cmd.none)
 
     NewAlbum (Err _) ->
       ({ model | title = "Whoops"}, Cmd.none)
@@ -102,11 +102,11 @@ subscriptions model =
 
 getIt : Cmd Msg
 getIt =
-  Http.send NewAlbum (Http.get "someurl" decodeAlbumsUrl)
+  Http.send NewAlbum (Http.get "data/album1.json" decodeAlbumTitle)
 
-decodeAlbumsUrl : Decode.Decoder String
-decodeAlbumsUrl =
-  Decode.at ["data", "url"] Decode.string
+decodeAlbumTitle : Decode.Decoder String
+decodeAlbumTitle =
+  Decode.at ["title"] Decode.string
 
 -- DATA
 
