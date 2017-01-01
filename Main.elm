@@ -1,4 +1,4 @@
-import Html exposing (text, ul, div, audio, p, h1)
+import Html exposing (text, ul, div, audio, p, h1, h2)
 import Html.Attributes exposing (class, src, id, type_, controls)
 
 viewTune tune =
@@ -15,13 +15,14 @@ viewTune tune =
 
 viewAlbum album =
   div []
-  [ h1 [] [ text album.title]
+  [ h2 [] [ text album.title]
   , ul [] (List.map viewTune album.tracks)
   ]
 
 main =
   div []
-  [ viewAlbum album1
+  [ h1 [] [ text "elmtunes" ]
+  , viewAlbum album1
   , viewAlbum album2
   ]
 
