@@ -16,3 +16,4 @@ deploy:
   provider: surge
   project: ./public/
   domain: six-shooter.surge.sh
+  skip_cleanup: true
