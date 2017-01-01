@@ -1,4 +1,5 @@
-import Html exposing (Html, text, ul, div, audio, p, h1, h2)
+import Html exposing (Html, text, ul, div, audio, p, h1, h2, button)
+import Html.Events exposing (onClick)
 import Html.Attributes exposing (class, src, id, type_, controls)
 import Http
 import Json.Decode as Decode
@@ -39,11 +40,15 @@ init =
 
 
 type Msg
-  = NewAlbum (Result Http.Error String)
+  = GetIt
+  | NewAlbum (Result Http.Error String)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
+    GetIt ->
+      (model, getIt)
+
     NewAlbum (Ok newUrl) ->
       ({ model | title = "Album 2"}, Cmd.none)
 
@@ -59,6 +64,7 @@ view : Model -> Html Msg
 view model =
   div []
     [ h1 [] [ text model.title ]
+    , button [ onClick GetIt ] [ text "New Album" ]
     , viewAlbum album1
     , viewAlbum album2
     ]
@@ -94,8 +100,8 @@ subscriptions model =
 -- HTTP
 
 
-getAlbums : Cmd Msg
-getAlbums =
+getIt : Cmd Msg
+getIt =
   Http.send NewAlbum (Http.get "someurl" decodeAlbumsUrl)
 
 decodeAlbumsUrl : Decode.Decoder String
