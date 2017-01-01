@@ -1,5 +1,7 @@
 import Html exposing (Html, text, ul, div, audio, p, h1, h2)
 import Html.Attributes exposing (class, src, id, type_, controls)
+import Http
+import Json.Decode as Decode
 
 main =
   Html.program
@@ -37,13 +39,16 @@ init =
 
 
 type Msg
-  = ChangeAlbum
+  = NewAlbum (Result Http.Error String)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    ChangeAlbum ->
+    NewAlbum (Ok newUrl) ->
       ({ model | title = "Album 2"}, Cmd.none)
+
+    NewAlbum (Err _) ->
+      ({ model | title = "Whoops"}, Cmd.none)
 
 
 
@@ -86,6 +91,16 @@ subscriptions model =
 
 
 
+-- HTTP
+
+
+getAlbums : Cmd Msg
+getAlbums =
+  Http.send NewAlbum (Http.get "someurl" decodeAlbumsUrl)
+
+decodeAlbumsUrl : Decode.Decoder String
+decodeAlbumsUrl =
+  Decode.at ["data", "url"] Decode.string
 
 -- DATA
 
