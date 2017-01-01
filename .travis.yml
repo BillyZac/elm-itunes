@@ -8,6 +8,7 @@ install:
   - elm-package install -y
 
 script:
+  - rm -rf public
   - mkdir public
   - elm-make Main.elm --output=public/index.html
 
