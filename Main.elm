@@ -1,5 +1,40 @@
-import Html exposing (text, ul, div, audio, p, h1, h2)
+import Html exposing (Html, text, ul, div, audio, p, h1, h2)
 import Html.Attributes exposing (class, src, id, type_, controls)
+
+main =
+  Html.beginnerProgram
+    { model = model
+    , view = view
+    , update = update
+  }
+
+type alias Model =
+  { title : String
+  }
+
+
+model : Model
+model =
+  { title = "Album 1"
+  }
+
+type Msg
+  = ChangeAlbum
+
+update : Msg -> Model -> Model
+update msg model =
+  case msg of
+    ChangeAlbum ->
+      { model | title = "Album 2"}
+
+view : Model -> Html Msg
+view model =
+  div []
+    [ h1 [] [ text model.title ]
+    , viewAlbum album1
+    , viewAlbum album2
+    ]
+
 
 viewTune tune =
   div [ class "audio-player" ]
@@ -18,14 +53,6 @@ viewAlbum album =
   [ h2 [] [ text album.title]
   , ul [] (List.map viewTune album.tracks)
   ]
-
-main =
-  div []
-  [ h1 [] [ text "elmtunes" ]
-  , viewAlbum album1
-  , viewAlbum album2
-  ]
-
 
 
 -- DATA
