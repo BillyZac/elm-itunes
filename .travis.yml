@@ -1,0 +1,4 @@
+deploy:
+  provider: surge
+  project: ./public/
+  domain: six-shooter.surge.sh
