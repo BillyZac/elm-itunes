@@ -22,18 +22,20 @@ main =
 
 type alias Model =
     { title : String
+    , message : String
     }
 
 
 model : Model
 model =
-    { title = "this is not used"
+    { title = "This is not used..."
+    , message = "...so what is the point?"
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model "Album 1"
+    ( Model "Album 1" "Messages for you go here"
     , Cmd.none
     )
 
@@ -46,6 +48,7 @@ type Msg
     = GetIt
     | NewAlbum (Result Http.Error String)
     | Change String
+    | ToggleFave
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -55,13 +58,16 @@ update msg model =
             ( model, getIt )
 
         NewAlbum (Ok newTitle) ->
-            ( { model | title = newTitle }, Cmd.none )
+            ( { model | title = newTitle, message = "You fetched an album name." }, Cmd.none )
 
         NewAlbum (Err _) ->
-            ( { model | title = "Whoops" }, Cmd.none )
+            ( { model | message = "Dang, the fetch failed." }, Cmd.none )
 
         Change userInput ->
-            ( { model | title = userInput }, Cmd.none )
+            ( { model | message = "You typed " ++ userInput }, Cmd.none )
+
+        ToggleFave ->
+            ( { model | message = "You faved something." }, Cmd.none )
 
 
 
@@ -72,7 +78,8 @@ view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text model.title ]
-        , button [ onClick GetIt ] [ text "Feath another album name" ]
+        , p [] [ text model.message ]
+        , button [ onClick GetIt ] [ text "Fetch another album name" ]
         , input [ placeholder "Type something", onInput Change ] []
         , viewAlbum album1
         , viewAlbum album2
@@ -95,8 +102,16 @@ viewTune tune =
 viewAlbum album =
     div []
         [ h2 [] [ text album.title ]
-        , label [] [ input [ type_ "checkbox" ] [], text "Fave" ]
+        , checkbox ToggleFave "Fave"
         , ul [] (List.map viewTune album.tracks)
+        ]
+
+
+checkbox : msg -> String -> Html msg
+checkbox msg name =
+    label []
+        [ input [ type_ "checkbox", onClick msg ] []
+        , text name
         ]
 
 
