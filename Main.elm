@@ -2,11 +2,17 @@ import Html exposing (Html, text, ul, div, audio, p, h1, h2)
 import Html.Attributes exposing (class, src, id, type_, controls)
 
 main =
-  Html.beginnerProgram
-    { model = model
-    , view = view
+  Html.program
+    { init = init
     , update = update
-  }
+    , view = view
+    , subscriptions = subscriptions
+    }
+
+
+
+-- MODEL
+
 
 type alias Model =
   { title : String
@@ -15,17 +21,34 @@ type alias Model =
 
 model : Model
 model =
-  { title = "Album 1"
+  { title = "this is not used"
   }
+
+init : (Model, Cmd Msg)
+init =
+  ( Model "Album 1"
+  , Cmd.none
+  )
+
+
+
+
+-- UPDATE
+
 
 type Msg
   = ChangeAlbum
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     ChangeAlbum ->
-      { model | title = "Album 2"}
+      ({ model | title = "Album 2"}, Cmd.none)
+
+
+
+-- VIEW
+
 
 view : Model -> Html Msg
 view model =
@@ -34,7 +57,6 @@ view model =
     , viewAlbum album1
     , viewAlbum album2
     ]
-
 
 viewTune tune =
   div [ class "audio-player" ]
@@ -55,7 +77,18 @@ viewAlbum album =
   ]
 
 
+
+-- SUBSCRIPTIONS
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.none
+
+
+
+
 -- DATA
+
 
 album1 =
   { title = "Grow Up"
